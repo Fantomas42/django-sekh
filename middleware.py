@@ -72,8 +72,9 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
             soup = BeautifulSoup(smart_str(content))
             for t in term:
                 for text in soup.find('body').findAll(text=re.compile(t, re.IGNORECASE)):
-                    if '{' in text:
+                    if text.parent.name in ('code', 'script', 'pre'):
                         continue
+                    
                     # Need to find a cleaner method for the case
                     new_text = text.replace(t, '<span class="highlight term_%s">%s</span>' % (index, t))
                     new_text = new_text.replace(t.capitalize(), '<span class="highlight term_%s">%s</span>' % (index, t.capitalize()))
