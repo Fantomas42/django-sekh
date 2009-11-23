@@ -8,6 +8,8 @@ import urlparse
 from BeautifulSoup import BeautifulSoup
 from django.utils.encoding import smart_str
 
+HIGHLIGHT_PATTERN = '<span class="highlight term_%s">%s</span>'
+
 class BaseSearchReferrer(object):
     SEARCH_PARAMS = {
         'AltaVista': 'q',
@@ -71,14 +73,13 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
             index = 1
             soup = BeautifulSoup(smart_str(content))
             for t in term:
-                for text in soup.find('body').findAll(text=re.compile(t, re.IGNORECASE)):
+                pattern = re.compile(re.escape(t), re.I)
+                if re.search(pattern, HIGHLIGHT_PATTERN):
+                    continue                    
+                for text in soup.find('body').findAll(text=pattern):
                     if text.parent.name in ('code', 'script', 'pre'):
-                        continue
-                    
-                    # Need to find a cleaner method for the case
-                    new_text = text.replace(t, '<span class="highlight term_%s">%s</span>' % (index, t))
-                    new_text = new_text.replace(t.capitalize(), '<span class="highlight term_%s">%s</span>' % (index, t.capitalize()))
-                    new_text = new_text.replace(t.upper(), '<span class="highlight term_%s">%s</span>' % (index, t.upper()))
+                        continue                    
+                    new_text = re.sub(pattern, HIGHLIGHT_PATTERN % (index, t), text, 0)
                     text.replaceWith(new_text)
                 index += 1
             response.content = str(soup)
