@@ -1,0 +1,15 @@
+*.orig
+*.rej
+*~
+*.pyc
+.installed.cfg
+django-sekh.egg-info/*
+lib/*
+include/*
+bin/*
+eggs/*
+parts/*
+develop-eggs/*
+downloads/*
+src_eggs/*
+
