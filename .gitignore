@@ -3,7 +3,7 @@
 *~
 *.pyc
 .installed.cfg
-django-sekh.egg-info/*
+django_sekh.egg-info/*
 lib/*
 include/*
 bin/*

@@ -13,7 +13,9 @@ It will retrieve the keywords of the search and decorate them with a **span** ma
 Install
 =======
 
-Install the package in your *PYTHON_PATH* by getting the sources and run **setup.py** or use *pip*. ::
+First of all you need to install *BeautifulSoup*.
+
+Then install the package in your *PYTHON_PATH* by getting the sources and run **setup.py** or use *pip*. ::
 
   $> pip install -e git://github.com/Fantomas42/django-sekh.git#egg=django-sekh
 
@@ -24,7 +26,10 @@ Usage
 
 In your settings file, simply add this middleware at the end of the list. ::
 
+  MIDDLEWARE_CLASSES = (
+    ...
     'sekh.middleware.KeywordsHighlightingMiddleware',
+    )
 
 This is it !
 
@@ -33,8 +38,8 @@ Testing
 
 If you want to test the highlighter, you can pass keywords in the **hl** parameters in GET.
 
-    http://localhost/?hl=django
-    http://localhost/?hl=toto titi tata
+    http://localhost:8000/?hl=django
+    http://localhost:8000/?hl=toto titi tata
 
 Caution
 =======
