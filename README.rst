@@ -2,7 +2,11 @@
 django-sekh
 ===========
 
-Django-**S**earch **E**ngine **K**eywords **H**ighlighter 
+Django-**S**
+earch **E**
+ngine **K**
+eywords **H**
+ighlighter 
 
 is a django middleware providing the hability to highlight the user's search keywords if he comming from a search engine.
 
@@ -38,8 +42,7 @@ Testing
 
 If you want to test the highlighter, you can pass keywords in the **hl** parameters in GET.
 
-    http://localhost:8000/?hl=django
-    http://localhost:8000/?hl=toto titi tata
+  http://localhost:8000/admin?hl=django admin
 
 Caution
 =======
