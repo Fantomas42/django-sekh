@@ -6,11 +6,14 @@ import cgi
 import urlparse
 
 from BeautifulSoup import BeautifulSoup
+
 from django.utils.encoding import smart_str
 
 HIGHLIGHT_PATTERN = '<span class="highlight term_%s">%s</span>'
 
+
 class BaseSearchReferrer(object):
+
     SEARCH_PARAMS = {
         'AltaVista': 'q',
         'Ask': 'q',
@@ -20,14 +23,14 @@ class BaseSearchReferrer(object):
         'MSN': 'q',
         'Yahoo': 'p',
         }
-    
+
     NETWORK_RE = r"""^
     (?P<subdomain>[-.a-z\d]+\.)?
     (?P<engine>%s)
     (?P<top_level>(?:\.[a-z]{2,3}){1,2})
     (?P<port>:\d+)?
     $(?ix)"""
-    
+
     def parse_search(self, url):
         """
         Extract the search engine, domain, and search term from `url`
@@ -35,7 +38,7 @@ class BaseSearchReferrer(object):
         ('Google', 'www.google.co.uk', 'django framework'). Note that
         the search term will be converted to lowercase and have normalized
         spaces.
-        
+
         The first tuple item will be None if the referrer is not a
         search engine.
         """
@@ -54,6 +57,7 @@ class BaseSearchReferrer(object):
                     return (engine, network, term)
         return (None, network, None)
 
+
 class KeywordsHighlightingMiddleware(BaseSearchReferrer):
     """Middleware highlighting keywords on a html page
     by adding a span markup with a class"""
@@ -65,7 +69,7 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
         engine, domain, term = self.parse_search(referrer)
         content = response.content
 
-        if request.GET.has_key('hl'):
+        if 'hl' in request.GET:
             term = request.GET['hl']
 
         if term and '<html' in content:
@@ -75,15 +79,14 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
             for t in term:
                 pattern = re.compile(re.escape(t), re.I)
                 if re.search(pattern, HIGHLIGHT_PATTERN):
-                    continue                    
+                    continue
                 for text in soup.find('body').findAll(text=pattern):
                     if text.parent.name in ('code', 'script', 'pre'):
-                        continue                    
-                    new_text = re.sub(pattern, HIGHLIGHT_PATTERN % (index, t), text, 0)
+                        continue
+                    new_text = re.sub(pattern, HIGHLIGHT_PATTERN % (index, t),
+                                      text, 0)
                     text.replaceWith(new_text)
                 index += 1
             response.content = str(soup)
-            
+
         return response
-
-
