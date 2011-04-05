@@ -7,9 +7,12 @@ import urlparse
 
 from BeautifulSoup import BeautifulSoup
 
+from django.conf import settings
 from django.utils.encoding import smart_str
 
+
 HIGHLIGHT_PATTERN = '<span class="highlight term_%s">%s</span>'
+HIGHLIGHT_GET_VARNAME = getattr(settings, 'HIGHLIGHT_GET_VARNAME', 'hl')
 
 
 class BaseSearchReferrer(object):
@@ -69,8 +72,8 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
         engine, domain, term = self.parse_search(referrer)
         content = response.content
 
-        if 'hl' in request.GET:
-            term = request.GET['hl']
+        if HIGHLIGHT_GET_VARNAME in request.GET:
+            term = request.GET[HIGHLIGHT_GET_VARNAME]
 
         if term and '<html' in content:
             term = term.split()
