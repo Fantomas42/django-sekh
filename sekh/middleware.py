@@ -77,7 +77,7 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
             index = 1
             soup = BeautifulSoup(smart_str(content))
             for t in term:
-                pattern = re.compile(re.escape(t), re.I)
+                pattern = re.compile(re.escape(t), re.I | re.U)
                 if re.search(pattern, HIGHLIGHT_PATTERN):
                     continue
                 for text in soup.find('body').findAll(text=pattern):
