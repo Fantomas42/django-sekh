@@ -76,6 +76,7 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
             term = request.GET[HIGHLIGHT_GET_VARNAME]
 
         if term and '<html' in content:
+            update_content = False
             term = term.split()
             index = 1
             soup = BeautifulSoup(smart_str(content))
@@ -89,7 +90,10 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
                     new_text = re.sub(pattern, HIGHLIGHT_PATTERN % (index, t),
                                       text, 0)
                     text.replaceWith(new_text)
+                    update_content = True
                 index += 1
-            response.content = str(soup)
+
+            if update_content:
+                response.content = str(soup)
 
         return response
