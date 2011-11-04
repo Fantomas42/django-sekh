@@ -12,7 +12,21 @@ from django.utils.encoding import smart_str
 
 
 HIGHLIGHT_PATTERN = '<span class="highlight term-%s">%s</span>'
-HIGHLIGHT_GET_VARNAME = getattr(settings, 'HIGHLIGHT_GET_VARNAME', 'hl')
+HIGHLIGHT_GET_VARNAMES = getattr(settings, 'HIGHLIGHT_GET_VARNAMES',
+                                 ['highlight', 'hl', 'q', 'query', 'pattern'])
+
+
+def remove_duplicates(seq):
+    """Remove duplicates elements in a list
+    preserving the order"""
+    seen = {}
+    result = []
+    for item in seq:
+        if item in seen:
+            continue
+        seen[item] = True
+        result.append(item)
+    return result
 
 
 class BaseSearchReferrer(object):
@@ -38,7 +52,7 @@ class BaseSearchReferrer(object):
         """
         Extract the search engine, domain, and search term from `url`
         and return them as (engine, domain, term). For example,
-        ('Google', 'www.google.co.uk', 'django framework'). Note that
+        ('Google', 'www.google.co.uk', ['django, 'framework']). Note that
         the search term will be converted to lowercase and have normalized
         spaces.
 
@@ -50,15 +64,15 @@ class BaseSearchReferrer(object):
             network = parsed[1]
             query = parsed[3]
         except (AttributeError, IndexError):
-            return (None, None, None)
+            return (None, None, [])
         for engine, param in self.SEARCH_PARAMS.iteritems():
             match = re.match(self.NETWORK_RE % engine, network)
             if match and match.group(2):
-                term = cgi.parse_qs(query).get(param)
-                if term and term[0]:
-                    term = ' '.join(term[0].split()).lower()
-                    return (engine, network, term)
-        return (None, network, None)
+                terms = cgi.parse_qs(query).get(param)
+                if terms:
+                    terms = [term.lower() for term in terms[0].split()]
+                    return (engine, network, terms)
+        return (None, network, [])
 
 
 class KeywordsHighlightingMiddleware(BaseSearchReferrer):
@@ -69,18 +83,18 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
         """Using BeautifulSoup to modify the HTML
         rendered by the view"""
         referrer = request.META.get('HTTP_REFERER')
-        engine, domain, term = self.parse_search(referrer)
-        content = response.content
+        engine, domain, terms = self.parse_search(referrer)
 
-        if HIGHLIGHT_GET_VARNAME in request.GET:
-            term = request.GET[HIGHLIGHT_GET_VARNAME]
+        for GET_varname in HIGHLIGHT_GET_VARNAMES:
+            if request.GET.get(GET_varname):
+                terms.extend(request.GET[GET_varname].split())
 
-        if term and '<html' in content:
+        if terms and '<html' in response.content:
             index = 1
             update_content = False
-            soup = BeautifulSoup(smart_str(content))
-            for t in term.split():
-                pattern = re.compile(re.escape(t), re.I | re.U)
+            soup = BeautifulSoup(smart_str(response.content))
+            for term in remove_duplicates(terms):
+                pattern = re.compile(re.escape(term), re.I | re.U)
 
                 for text in soup.body.findAll(text=pattern):
                     if text.parent.name in ('code', 'script', 'pre'):
