@@ -68,6 +68,15 @@ class KeywordsHighlightingMiddlewareTestCase(TestCase):
             '<span class="highlight term-1">Hello</span>' in response.content)
         # When fixed, add a text with the highlight word and check behavior.
 
+    def test_multiple_in_one_markup(self):
+        response = KeywordsHighlightingMiddleware().process_response(
+            self._get_request({HIGHLIGHT_GET_VARNAME: 'Hello'}),
+            HttpResponse('<html><body><p>Hello world hello !</p></body></html>'))
+        self.assertTrue(
+            '<span class="highlight term-1">Hello</span> world ' \
+            '<span class="highlight term-1">hello</span>' in response.content)
+        # Fail !
+
     def test_with_cases_REFERER(self):
         response = KeywordsHighlightingMiddleware().process_response(
             self._get_request(referer='http://www.google.com/?q=HELLO World'),
