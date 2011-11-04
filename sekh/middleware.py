@@ -11,7 +11,7 @@ from django.conf import settings
 from django.utils.encoding import smart_str
 
 
-HIGHLIGHT_PATTERN = '<span class="highlight term_%s">%s</span>'
+HIGHLIGHT_PATTERN = '<span class="highlight term-%s">%s</span>'
 HIGHLIGHT_GET_VARNAME = getattr(settings, 'HIGHLIGHT_GET_VARNAME', 'hl')
 
 
