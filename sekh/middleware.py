@@ -85,13 +85,16 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
                 # TODO remove elegantly by adding a Tag instead of replaceWith
                 if pattern.search(HIGHLIGHT_PATTERN):
                     continue
-                for text in soup.find('body').findAll(text=pattern):
+
+                for text in soup.body.findAll(text=pattern):
                     if text.parent.name in ('code', 'script', 'pre'):
                         continue
-                    match = pattern.search(text)
-                    match_term = match.group(0)
-                    new_text = pattern.sub(
-                        HIGHLIGHT_PATTERN % (index, match_term), text)
+
+                    def highlight(match):
+                        match_term = match.group(0)
+                        return HIGHLIGHT_PATTERN % (index, match_term)
+
+                    new_text = pattern.sub(highlight, text)
                     text.replaceWith(new_text)
                     update_content = True
                 index += 1
