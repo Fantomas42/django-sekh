@@ -82,6 +82,7 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
             soup = BeautifulSoup(smart_str(content))
             for t in term:
                 pattern = re.compile(re.escape(t), re.I | re.U)
+                # TODO remove elegantly by adding a Tag instead of replaceWith
                 if re.search(pattern, HIGHLIGHT_PATTERN):
                     continue
                 for text in soup.find('body').findAll(text=pattern):
