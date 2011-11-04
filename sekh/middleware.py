@@ -76,15 +76,11 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
             term = request.GET[HIGHLIGHT_GET_VARNAME]
 
         if term and '<html' in content:
-            update_content = False
-            term = term.split()
             index = 1
+            update_content = False
             soup = BeautifulSoup(smart_str(content))
-            for t in term:
+            for t in term.split():
                 pattern = re.compile(re.escape(t), re.I | re.U)
-                # TODO remove elegantly by adding a Tag instead of replaceWith
-                if pattern.search(HIGHLIGHT_PATTERN):
-                    continue
 
                 for text in soup.body.findAll(text=pattern):
                     if text.parent.name in ('code', 'script', 'pre'):
@@ -97,6 +93,9 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
                     new_text = pattern.sub(highlight, text)
                     text.replaceWith(new_text)
                     update_content = True
+                # Reload the entire soup, because substituion
+                # doesn't rebuild the document tree
+                soup = BeautifulSoup(str(soup))
                 index += 1
 
             if update_content:
