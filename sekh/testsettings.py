@@ -5,7 +5,3 @@ DATABASES = {
                 'ENGINE': 'django.db.backends.sqlite3'}}
 
 INSTALLED_APPS = ['sekh']
-
-# MIDDLEWARE_CLASSES = [
-#     'sekh.middleware.KeywordsHighlightingMiddleware'
-#     ]
