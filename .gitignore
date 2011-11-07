@@ -9,6 +9,7 @@ include/*
 bin/*
 eggs/*
 parts/*
+dist/*
 develop-eggs/*
 downloads/*
 src_eggs/*
