@@ -13,4 +13,5 @@ dist/*
 develop-eggs/*
 downloads/*
 src_eggs/*
+.tox
 TODO
