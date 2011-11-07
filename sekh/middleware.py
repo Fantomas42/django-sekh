@@ -82,6 +82,9 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
     def process_response(self, request, response):
         """Using BeautifulSoup to modify the HTML
         rendered by the view"""
+        if not '<html' in response.content:
+            return response
+
         referrer = request.META.get('HTTP_REFERER')
         engine, domain, terms = self.parse_search(referrer)
 
@@ -89,30 +92,32 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
             if request.GET.get(GET_varname):
                 terms.extend(request.GET[GET_varname].split())
 
-        if terms and '<html' in response.content:
-            index = 1
-            update_content = False
-            soup = BeautifulSoup(smart_str(response.content))
-            for term in remove_duplicates(terms):
-                pattern = re.compile(re.escape(term), re.I | re.U)
+        if not terms:
+            return response
 
-                for text in soup.body.findAll(text=pattern):
-                    if text.parent.name in ('code', 'script', 'pre'):
-                        continue
+        index = 1
+        update_content = False
+        soup = BeautifulSoup(smart_str(response.content))
+        for term in remove_duplicates(terms):
+            pattern = re.compile(re.escape(term), re.I | re.U)
 
-                    def highlight(match):
-                        match_term = match.group(0)
-                        return HIGHLIGHT_PATTERN % (index, match_term)
+            for text in soup.body.findAll(text=pattern):
+                if text.parent.name in ('code', 'script', 'pre'):
+                    continue
 
-                    new_text = pattern.sub(highlight, text)
-                    text.replaceWith(new_text)
-                    update_content = True
-                # Reload the entire soup, because substituion
-                # doesn't rebuild the document tree
-                soup = BeautifulSoup(str(soup))
-                index += 1
+                def highlight(match):
+                    match_term = match.group(0)
+                    return HIGHLIGHT_PATTERN % (index, match_term)
 
-            if update_content:
-                response.content = str(soup)
+                new_text = pattern.sub(highlight, text)
+                text.replaceWith(new_text)
+                update_content = True
+            # Reload the entire soup, because substituion
+            # doesn't rebuild the document tree
+            soup = BeautifulSoup(str(soup))
+            index += 1
+
+        if update_content:
+            response.content = str(soup)
 
         return response
