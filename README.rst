@@ -38,7 +38,7 @@ This is it !
 Search Engines
 ==============
 
-Currenty django-sekh support these following search engines :
+Currenty django-sekh supports these search engines :
 
 * AltaVista
 * Ask
@@ -48,7 +48,18 @@ Currenty django-sekh support these following search engines :
 * MSN
 * Yahoo
 
-Testin
+And even if you have a custom search engine plugged on your website,
+``sekh`` can highlight the searched keywords. Currently ``sekh`` will
+highlight all the terms contained in this list of GET variables :
+::
+
+    ['highlight', 'hl', 'q', 'query', 'pattern']
+
+You can change the supported values by defining a variable named
+``HIGHLIGHT_GET_VARNAMES`` representing a list of supported variable names
+in your project's settings.
+
+Testing
 =======
 
 If you want to test the highlighter, you can pass keywords in the ``hl``
