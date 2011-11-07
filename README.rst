@@ -67,10 +67,5 @@ parameter in GET.
 
   http://localhost:8000/admin?hl=django%20admin
 
-Caution
-=======
-
-If your HTML is not well formated, the middleware can fail and the page
-will not be displayed.
 
 .. _`BeautifulSoup`: http://www.crummy.com/software/BeautifulSoup/
