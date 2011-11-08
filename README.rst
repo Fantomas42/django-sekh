@@ -40,12 +40,12 @@ Search Engines
 
 Currenty django-sekh supports these search engines :
 
-* AltaVista
 * Ask
+* Baidu
+* Bing
 * Google
-* Live
+* Hotbot
 * Lycos
-* MSN
 * Yahoo
 
 And even if you have a custom search engine plugged on your website,

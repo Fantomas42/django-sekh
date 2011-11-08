@@ -32,12 +32,12 @@ def remove_duplicates(seq):
 class BaseSearchReferrer(object):
 
     SEARCH_PARAMS = {
-        'AltaVista': 'q',
         'Ask': 'q',
+        'Baidu': 'wd',
+        'Bing': 'q',
         'Google': 'q',
-        'Live': 'q',
+        'Hotbot': 'q',
         'Lycos': 'query',
-        'MSN': 'q',
         'Yahoo': 'p',
         }
 
