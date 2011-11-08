@@ -1,5 +1,5 @@
 """Search Engine Keywords Highlighter"""
-__version__ = '0.2'
+__version__ = '0.3.dev'
 __license__ = 'BSD License'
 
 __author__ = 'Fantomas42'
