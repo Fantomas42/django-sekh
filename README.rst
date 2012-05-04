@@ -16,7 +16,7 @@ markup containing the classes ``highlight term-X`` for CSS makuping.
 Installation
 ============
 
-First of all you need to install `BeautifulSoup`_ >= 3.2.0.
+First of all you need to install `BeautifulSoup`_ == 3.2.0.
 
 Then install the package in your ``PYTHON_PATH`` by getting the
 sources and run ``setup.py`` or use ``pip``. ::
