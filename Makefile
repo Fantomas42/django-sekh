@@ -26,7 +26,7 @@ kwalitee:
 
 2to3:
 	@echo "$(COLOR)* Checking Py3 code$(NO_COLOR)"
-	@2to3 sekh/
+	@2to3 -x dict -x imports sekh/
 
 clean:
 	@echo "$(COLOR)* Removing useless files$(NO_COLOR)"

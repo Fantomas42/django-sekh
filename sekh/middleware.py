@@ -3,7 +3,10 @@ of an user's search in a HTML page,
 based on http://www.djangosnippets.org/snippets/197/"""
 import re
 import cgi
-import urlparse
+try:
+    from urllib.parse import urlsplit
+except ImportError:  # Python 2
+    from urlparse import urlsplit
 
 from BeautifulSoup import BeautifulSoup
 
@@ -60,12 +63,12 @@ class BaseSearchReferrer(object):
         search engine.
         """
         try:
-            parsed = urlparse.urlsplit(url)
+            parsed = urlsplit(url)
             network = parsed[1]
             query = parsed[3]
         except (AttributeError, IndexError):
             return (None, None, [])
-        for engine, param in self.SEARCH_PARAMS.iteritems():
+        for engine, param in self.SEARCH_PARAMS.items():
             match = re.match(self.NETWORK_RE % engine, network)
             if match and match.group(2):
                 terms = cgi.parse_qs(query).get(param)
