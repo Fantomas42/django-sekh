@@ -113,7 +113,7 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
                     return HIGHLIGHT_PATTERN % (index, match_term)
 
                 new_text = pattern.sub(highlight, text)
-                text.replace_with(new_text)
+                text.replace_with(BeautifulSoup(new_text))
                 update_content = True
             # Reload the entire soup, because substituion
             # doesn't rebuild the document tree
