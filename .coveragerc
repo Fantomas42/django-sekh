@@ -1,0 +1,6 @@
+[report]
+source		= sekh
+omit		= */eggs/*,*/lib/*,*tests*
+exclude_lines	=
+    pragma: no cover
+    from urllib.parse import urlsplit
