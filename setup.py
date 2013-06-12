@@ -31,5 +31,5 @@ setup(
     license=sekh.__license__,
     include_package_data=True,
     zip_safe=False,
-    install_requires=['BeautifulSoup==3.2.0']
+    install_requires=['beautifulsoup4']
     )

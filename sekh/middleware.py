@@ -8,7 +8,7 @@ try:
 except ImportError:  # Python 2
     from urlparse import urlsplit
 
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 from django.conf import settings
 from django.utils.encoding import smart_str
@@ -104,7 +104,7 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
         for term in remove_duplicates(terms):
             pattern = re.compile(re.escape(term), re.I | re.U)
 
-            for text in soup.body.findAll(text=pattern):
+            for text in soup.body.find_all(text=pattern):
                 if text.parent.name in ('code', 'script', 'pre'):
                     continue
 
@@ -113,7 +113,7 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
                     return HIGHLIGHT_PATTERN % (index, match_term)
 
                 new_text = pattern.sub(highlight, text)
-                text.replaceWith(new_text)
+                text.replace_with(new_text)
                 update_content = True
             # Reload the entire soup, because substituion
             # doesn't rebuild the document tree
