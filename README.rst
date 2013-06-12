@@ -2,6 +2,10 @@
 Django-SEKH
 ===========
 
+|latest-version| |downloads|
+
+|travis-master| |coverage-master|
+
 Django Search Engine Keywords **Highlighter**,
 
 is a middleware for Django providing the capacities to highlight the user's
@@ -67,5 +71,18 @@ parameter in GET.
 
   http://localhost:8000/admin?hl=django%20admin
 
+
+.. |travis-master| image:: https://travis-ci.org/Fantomas42/django-sekh.png?branch=master
+   :alt: Build Status - master branch
+   :target: http://travis-ci.org/Fantomas42/django-sekh
+.. |coverage-master| image:: https://coveralls.io/repos/Fantomas42/django-sekh/badge.png?branch=master
+   :alt: Coverage of the code
+   :target: https://coveralls.io/r/Fantomas42/django-sekh
+.. |latest-version| image:: https://pypip.in/v/django-sekh/badge.png
+   :alt: Latest version on Pypi
+   :target: https://crate.io/packages/django-sekh/
+.. |downloads| image:: https://pypip.in/d/django-sekh/badge.png
+   :alt: Downloads from Pypi
+   :target: https://crate.io/packages/django-sekh/
 
 .. _`BeautifulSoup`: http://www.crummy.com/software/BeautifulSoup/
