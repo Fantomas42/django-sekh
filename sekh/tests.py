@@ -57,7 +57,7 @@ class KeywordsHighlightingMiddlewareTestCase(TestCase):
             self._get_request({HIGHLIGHT_GET_VARNAMES[0]: 'Hello world'}),
             HttpResponse(HTML_CONTENT))
         self.assertTrue(
-            '<span class="highlight term-1">Hello</span> ' \
+            '<span class="highlight term-1">Hello</span> '
             '<span class="highlight term-2">world</span>' in response.content)
 
         response = KeywordsHighlightingMiddleware().process_response(
@@ -66,7 +66,7 @@ class KeywordsHighlightingMiddlewareTestCase(TestCase):
                                HIGHLIGHT_GET_VARNAMES[2]: 'Hello'}),
             HttpResponse(HTML_CONTENT))
         self.assertTrue(
-            '<span class="highlight term-1">Hello</span> ' \
+            '<span class="highlight term-1">Hello</span> '
             '<span class="highlight term-2">world</span>' in response.content)
 
     def test_dont_highlight_highlightings(self):
@@ -80,16 +80,16 @@ class KeywordsHighlightingMiddlewareTestCase(TestCase):
             self._get_request({HIGHLIGHT_GET_VARNAMES[0]: 'Hello high'}),
             HttpResponse(HTML_CONTENT.replace('world', 'high')))
         self.assertTrue(
-            '<span class="highlight term-1">Hello</span> ' \
+            '<span class="highlight term-1">Hello</span> '
             '<span class="highlight term-2">high</span>' in response.content)
 
     def test_multiple_in_one_markup(self):
         response = KeywordsHighlightingMiddleware().process_response(
             self._get_request({HIGHLIGHT_GET_VARNAMES[0]: 'Hello'}),
-            HttpResponse('<html><body><p>Hello world hello !' \
+            HttpResponse('<html><body><p>Hello world hello !'
                          '</p></body></html>'))
         self.assertTrue(
-            '<span class="highlight term-1">Hello</span> world ' \
+            '<span class="highlight term-1">Hello</span> world '
             '<span class="highlight term-1">hello</span>' in response.content)
 
     def test_with_cases_REFERER(self):
@@ -97,7 +97,7 @@ class KeywordsHighlightingMiddlewareTestCase(TestCase):
             self._get_request(referer='http://www.google.com/?q=HELLO World'),
             HttpResponse(HTML_CONTENT))
         self.assertTrue(
-            '<span class="highlight term-1">Hello</span> ' \
+            '<span class="highlight term-1">Hello</span> '
             '<span class="highlight term-2">world</span>' in response.content)
 
     def test_with_cases_GET(self):
@@ -105,5 +105,5 @@ class KeywordsHighlightingMiddlewareTestCase(TestCase):
             self._get_request({HIGHLIGHT_GET_VARNAMES[0]: 'HELLO World'}),
             HttpResponse(HTML_CONTENT))
         self.assertTrue(
-            '<span class="highlight term-1">Hello</span> ' \
+            '<span class="highlight term-1">Hello</span> '
             '<span class="highlight term-2">world</span>' in response.content)

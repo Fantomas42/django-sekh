@@ -39,7 +39,7 @@ class BaseSearchReferrer(object):
         'Hotbot': 'q',
         'Lycos': 'query',
         'Yahoo': 'p',
-        }
+    }
 
     NETWORK_RE = r"""^
     (?P<subdomain>[-.a-z\d]+\.)?
