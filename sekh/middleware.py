@@ -9,28 +9,9 @@ except ImportError:  # Python 2
     from urlparse import urlsplit
     from urlparse import parse_qs
 
-from bs4 import BeautifulSoup
-
-from django.conf import settings
-from django.utils.encoding import smart_str
-
-
-HIGHLIGHT_PATTERN = '<span class="highlight term-%s">%s</span>'
-HIGHLIGHT_GET_VARNAMES = getattr(settings, 'HIGHLIGHT_GET_VARNAMES',
-                                 ['highlight', 'hl', 'q', 'query', 'pattern'])
-
-
-def remove_duplicates(seq):
-    """Remove duplicates elements in a list
-    preserving the order"""
-    seen = {}
-    result = []
-    for item in seq:
-        if item in seen:
-            continue
-        seen[item] = True
-        result.append(item)
-    return result
+from sekh.utils import highlight
+from sekh.utils import remove_duplicates
+from sekh.settings import GET_VARNAMES
 
 
 class BaseSearchReferrer(object):
@@ -80,48 +61,28 @@ class BaseSearchReferrer(object):
 
 
 class KeywordsHighlightingMiddleware(BaseSearchReferrer):
-    """Middleware highlighting keywords on a html page
-    by adding a span markup with a class"""
+    """
+    Middleware highlighting keywords on a html page
+    by adding a markup with classes.
+    """
 
     def process_response(self, request, response):
-        """Using BeautifulSoup to modify the HTML
-        rendered by the view"""
+        """
+        Transform the HTML if keywords are present.
+        """
         if not '<html' in response.content:
             return response
 
         referrer = request.META.get('HTTP_REFERER')
         engine, domain, terms = self.parse_search(referrer)
 
-        for GET_varname in HIGHLIGHT_GET_VARNAMES:
+        for GET_varname in GET_VARNAMES:
             if request.GET.get(GET_varname):
                 terms.extend(request.GET[GET_varname].split())
 
         if not terms:
             return response
 
-        index = 1
-        update_content = False
-        soup = BeautifulSoup(smart_str(response.content))
-        for term in remove_duplicates(terms):
-            pattern = re.compile(re.escape(term), re.I | re.U)
-
-            for text in soup.body.find_all(text=pattern):
-                if text.parent.name in ('code', 'script', 'pre'):
-                    continue
-
-                def highlight(match):
-                    match_term = match.group(0)
-                    return HIGHLIGHT_PATTERN % (index, match_term)
-
-                new_text = pattern.sub(highlight, text)
-                text.replace_with(BeautifulSoup(new_text))
-                update_content = True
-            # Reload the entire soup, because substituion
-            # doesn't rebuild the document tree
-            soup = BeautifulSoup(str(soup))
-            index += 1
-
-        if update_content:
-            response.content = str(soup)
-
+        response.content = highlight(response.content,
+                                     remove_duplicates(terms))
         return response
