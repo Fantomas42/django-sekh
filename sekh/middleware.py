@@ -70,7 +70,8 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
         """
         Transform the HTML if keywords are present.
         """
-        if not '<html' in response.content:
+        if response.status_code != 200 or \
+                not 'text/html' in response['Content-Type']:
             return response
 
         referrer = request.META.get('HTTP_REFERER')

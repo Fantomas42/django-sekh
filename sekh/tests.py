@@ -70,7 +70,7 @@ class KeywordsHighlightingMiddlewareTestCase(TestCase):
             request.META['HTTP_REFERER'] = referer
         return request
 
-    def test_with_REFERER(self):
+    def test_referer(self):
         response = KeywordsHighlightingMiddleware().process_response(
             self._get_request(referer='http://toto.com/?q=Hello'),
             HttpResponse(HTML_CONTENT))
@@ -83,7 +83,7 @@ class KeywordsHighlightingMiddlewareTestCase(TestCase):
                           '<html><body><p>Hello <span class="highlight '
                           'term-1">world</span> !</p></body></html>')
 
-    def test_with_GET(self):
+    def test_get(self):
         response = KeywordsHighlightingMiddleware().process_response(
             self._get_request(),
             HttpResponse(HTML_CONTENT))
@@ -111,3 +111,9 @@ class KeywordsHighlightingMiddlewareTestCase(TestCase):
             response.content,
             '<html><body><p><span class="highlight term-1">Hello</span> '
             '<span class="highlight term-2">world</span> !</p></body></html>')
+
+    def test_non_html(self):
+        response = KeywordsHighlightingMiddleware().process_response(
+            self._get_request({'highlight': 'Hello world'}),
+            HttpResponse(HTML_CONTENT, content_type='text/xml'))
+        self.assertEquals(response.content, HTML_CONTENT)
