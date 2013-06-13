@@ -2,11 +2,12 @@
 of an user's search in a HTML page,
 based on http://www.djangosnippets.org/snippets/197/"""
 import re
-import cgi
 try:
     from urllib.parse import urlsplit
+    from urllib.parse import parse_qs
 except ImportError:  # Python 2
     from urlparse import urlsplit
+    from urlparse import parse_qs
 
 from bs4 import BeautifulSoup
 
@@ -71,7 +72,7 @@ class BaseSearchReferrer(object):
         for engine, param in self.SEARCH_PARAMS.items():
             match = re.match(self.NETWORK_RE % engine, network)
             if match and match.group(2):
-                terms = cgi.parse_qs(query).get(param)
+                terms = parse_qs(query).get(param)
                 if terms:
                     terms = [term.lower() for term in terms[0].split()]
                     return (engine, network, terms)
