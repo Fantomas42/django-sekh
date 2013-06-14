@@ -29,7 +29,7 @@ def highlight(content, terms):
     for term in terms:
         pattern = re.compile(re.escape(term), re.I | re.U)
 
-        for text in soup.body.find_all(text=pattern):
+        for text in soup.find_all(text=pattern):
             if text.parent.name in PROTECTED_MARKUPS:
                 continue
 
