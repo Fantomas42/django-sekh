@@ -12,7 +12,8 @@ def remove_duplicates(items):
     seen = {}
     result = []
     for item in items:
-        if item in seen:
+        item = item.strip()
+        if not item or item in seen:
             continue
         seen[item] = True
         result.append(item)
