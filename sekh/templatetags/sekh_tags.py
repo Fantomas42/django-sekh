@@ -39,7 +39,7 @@ def highlight_tag(parser, token):
         tag_name, terms = token.split_contents()
     except ValueError:
         raise template.TemplateSyntaxError(
-            'highlight tag requires exactly two arguments')
+            'highlight tag requires exactly one argument')
 
     nodelist = parser.parse(('endhighlight',))
     parser.delete_first_token()
