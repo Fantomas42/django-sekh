@@ -6,6 +6,7 @@ from django.template import Context
 from django.template import Template
 from django.template import TemplateSyntaxError
 
+from sekh.utils import excerpt
 from sekh.utils import highlight
 from sekh.utils import remove_duplicates
 from sekh.middleware import KeywordsHighlightingMiddleware
@@ -72,6 +73,19 @@ class TestHighlight(TestCase):
             highlight(HTML_CONTENT.replace('world', '<pre>world</pre>'),
                       ['world']),
             '<html><body><p>Hello <pre>world</pre> !</p></body></html>')
+
+
+class TestExcerpt(TestCase):
+    """Test of excerpt function"""
+    content = """
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In in nunc eros. Suspendisse a feugiat eros, et pharetra nisl. Cras pulvinar varius enim et aliquet. Sed sit amet ultricies libero. Etiam facilisis, lectus ut tristique rutrum, leo libero elementum eros, sed lobortis urna lacus sit amet velit. Quisque ut leo eu dolor aliquet eleifend mattis et urna. Praesent vitae viverra purus.
+    """
+
+    def test_excerpt(self):
+        self.assertEquals(
+            excerpt(self.content, ['lacus']), '')
+        self.assertEquals(
+            excerpt(self.content, ['aliquet', 'lacus']), '')
 
 
 class TestKeywordsHighlightingMiddleware(TestCase):
