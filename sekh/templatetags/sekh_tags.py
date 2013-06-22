@@ -9,7 +9,7 @@ from django.template.defaultfilters import stringfilter
 from sekh.utils import highlight
 from sekh.utils import remove_duplicates
 
-RE_SPLIT = re.compile(r' |;|,')
+RE_ARG_SPLIT = re.compile(r'[ ;,]')
 register = template.Library()
 
 
@@ -30,7 +30,7 @@ class HighLightNode(template.Node):
             terms = self.terms_var.resolve(context)
 
         return highlight(output,
-                         remove_duplicates(RE_SPLIT.split(terms)))
+                         remove_duplicates(RE_ARG_SPLIT.split(terms)))
 
 
 @register.tag(name='highlight')
@@ -51,4 +51,4 @@ def highlight_tag(parser, token):
 def highlight_filter(value, terms, autoescape=None):
     esc = autoescape and conditional_escape or (lambda x: x)
     return mark_safe(highlight(esc(value),
-                               remove_duplicates(RE_SPLIT.split(terms))))
+                               remove_duplicates(RE_ARG_SPLIT.split(terms))))
