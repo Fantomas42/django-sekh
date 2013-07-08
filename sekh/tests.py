@@ -78,14 +78,40 @@ class TestHighlight(TestCase):
 class TestExcerpt(TestCase):
     """Test of excerpt function"""
     content = """
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In in nunc eros. Suspendisse a feugiat eros, et pharetra nisl. Cras pulvinar varius enim et aliquet. Sed sit amet ultricies libero. Etiam facilisis, lectus ut tristique rutrum, leo libero elementum eros, sed lobortis urna lacus sit amet velit. Quisque ut leo eu dolor aliquet eleifend mattis et urna. Praesent vitae viverra purus.
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    In in nunc eros! Suspendisse a feugiat eros, et pharetra nisl ?
+    Cras pulvinar varius enim et aliquet. Sed sit amet ultricies libero.
+    Etiam facilisis, lectus ut tristique rutrum, leo libero
+    elementum eros, sed lobortis urna lacus sit amet velit.
+    Quisque ut leo eu dolor aliquet eleifend mattis et urna.
+    Praesent vitae viverra purus.
     """
 
     def test_excerpt(self):
         self.assertEquals(
-            excerpt(self.content, ['lacus']), '')
+            excerpt(self.content, ['lacus']),
+            '')
         self.assertEquals(
-            excerpt(self.content, ['aliquet', 'lacus']), '')
+            excerpt(self.content, ['aliquet']),
+            '')
+        self.assertEquals(
+            excerpt(self.content, ['aliquet', 'lacus']),
+            '')
+
+    def test_excerpt_case(self):
+        self.assertEquals(
+            excerpt(self.content, ['LACUS']),
+            '')
+
+    def test_excerpt_not_present(self):
+        self.assertEquals(
+            excerpt(self.content, ['toto']),
+            self.content)
+
+    def test_excerpt_none(self):
+        self.assertEquals(
+            excerpt(self.content, []),
+            self.content)
 
 
 class TestKeywordsHighlightingMiddleware(TestCase):
