@@ -77,41 +77,84 @@ class TestHighlight(TestCase):
 
 class TestExcerpt(TestCase):
     """Test of excerpt function"""
-    content = """
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-    In in nunc eros! Suspendisse a feugiat eros, et pharetra nisl ?
-    Cras pulvinar varius enim et aliquet. Sed sit amet ultricies libero.
-    Etiam facilisis, lectus ut tristique rutrum, leo libero
-    elementum eros, sed lobortis urna lacus sit amet velit.
-    Quisque ut leo eu dolor aliquet eleifend mattis et urna.
-    Praesent vitae viverra purus.
-    """
+    content = (
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+        'In in nunc eros! Suspendisse a feugiat eros, et pharetra nisl ? '
+        'Cras pulvinar varius enim et aliquet. Sed sit amet ultricies libero. '
+        'Etiam facilisis, lectus ut tristique rutrum, leo libero '
+        'elementum eros, sed lobortis urna lacus sit amet velit. '
+        'Quisque ut leo eu dolor aliquet eleifend mattis et urna. '
+        'Praesent vitae viverra purus.')
 
     def test_excerpt(self):
         self.assertEquals(
             excerpt(self.content, ['lacus']),
-            '')
+            'et aliquet. Sed sit amet ultricies libero. Etiam facilisis, '
+            'lectus ut tristique rutrum, leo libero elementum eros, sed '
+            'lobortis urna lacus sit amet velit. Quisque ut leo eu dolor '
+            'aliquet eleifend mattis et urna. Praesent vitae viverra purus.')
+        self.assertEquals(
+            excerpt(self.content, ['lacus'], 10),
+            'elementum eros, sed lobortis urna lacus sit amet velit. Quisque ut')
         self.assertEquals(
             excerpt(self.content, ['aliquet']),
-            '')
+            'consectetur adipiscing elit. In in nunc eros! Suspendisse a '
+            'feugiat eros, et pharetra nisl ? Cras pulvinar varius enim '
+            'et aliquet. Sed sit amet ultricies libero. Etiam facilisis, '
+            'lectus ut tristique rutrum, leo libero elementum eros, sed '
+            'lobortis urna lacus sit')
         self.assertEquals(
-            excerpt(self.content, ['aliquet', 'lacus']),
-            '')
+            excerpt(self.content, ['aliquet'], 10),
+            'Cras pulvinar varius enim et aliquet. Sed sit amet ultricies libero.')
+
+    def test_excerpt_multi_terms(self):
+        result = (
+            'lectus ut tristique rutrum, leo libero elementum eros, sed '
+            'lobortis urna lacus sit amet velit. Quisque ut leo eu dolor '
+            'aliquet eleifend mattis et urna. Praesent vitae viverra purus.'
+        )
+        self.assertEquals(
+            excerpt(self.content, ['aliquet', 'lacus']), result)
+        self.assertEquals(
+            excerpt(self.content, ['lacus', 'aliquet']), result)
+        self.assertEquals(
+            excerpt(self.content, ['aliquet', 'lacus'], 20),
+            'urna lacus sit amet velit. Quisque ut leo '
+            'eu dolor aliquet eleifend')
 
     def test_excerpt_case(self):
         self.assertEquals(
             excerpt(self.content, ['LACUS']),
-            '')
+            'et aliquet. Sed sit amet ultricies libero. Etiam facilisis, '
+            'lectus ut tristique rutrum, leo libero elementum eros, sed '
+            'lobortis urna lacus sit amet velit. Quisque ut leo eu dolor '
+            'aliquet eleifend mattis et urna. Praesent vitae viverra purus.')
 
     def test_excerpt_not_present(self):
         self.assertEquals(
             excerpt(self.content, ['toto']),
-            self.content)
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+            'In in nunc eros! Suspendisse a feugiat eros, et pharetra '
+            'nisl ? Cras pulvinar varius enim et aliquet. Sed sit amet '
+            'ultricies libero. Etiam facilisis, lectus ut tristique '
+            'rutrum, leo libero elementum')
+        self.assertEquals(
+            excerpt(self.content, ['toto'], 10),
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+            'In in')
 
     def test_excerpt_none(self):
         self.assertEquals(
             excerpt(self.content, []),
-            self.content)
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+            'In in nunc eros! Suspendisse a feugiat eros, et pharetra '
+            'nisl ? Cras pulvinar varius enim et aliquet. Sed sit amet '
+            'ultricies libero. Etiam facilisis, lectus ut tristique '
+            'rutrum, leo libero elementum')
+        self.assertEquals(
+            excerpt(self.content, [], 10),
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+            'In in')
 
 
 class TestKeywordsHighlightingMiddleware(TestCase):
