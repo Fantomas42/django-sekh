@@ -14,3 +14,10 @@ def remove_duplicates(items):
         seen[item] = True
         result.append(item)
     return result
+
+
+def list_range(x):
+    """
+    Returns the range of a list.
+    """
+    return max(x) - min(x)

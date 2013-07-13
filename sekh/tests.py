@@ -8,6 +8,7 @@ from django.template import TemplateSyntaxError
 
 from sekh.excerpt import excerpt
 from sekh.highlighting import highlight
+from sekh.utils import list_range
 from sekh.utils import remove_duplicates
 from sekh.middleware import KeywordsHighlightingMiddleware
 
@@ -32,6 +33,16 @@ class TestRemoveDuplicates(TestCase):
         self.assertEquals(
             remove_duplicates(['titi', ' ', 'toto', '', ' titi']),
             ['titi', 'toto'])
+
+
+class TestListRange(TestCase):
+    """Tests of list_range function"""
+
+    def test_list_range(self):
+        self.assertEquals(
+            list_range([5, 6, 10]), 5)
+        self.assertEquals(
+            list_range([1, 7, 9]), 8)
 
 
 class TestHighlight(TestCase):
