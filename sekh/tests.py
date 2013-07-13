@@ -9,6 +9,7 @@ from django.template import TemplateSyntaxError
 from sekh.excerpt import excerpt
 from sekh.highlighting import highlight
 from sekh.utils import list_range
+from sekh.utils import get_min_index
 from sekh.utils import remove_duplicates
 from sekh.middleware import KeywordsHighlightingMiddleware
 
@@ -43,6 +44,27 @@ class TestListRange(TestCase):
             list_range([5, 6, 10]), 5)
         self.assertEquals(
             list_range([1, 7, 9]), 8)
+
+
+class TestGetMinIndex(TestCase):
+    """Tests of get_min_index function"""
+
+    def test_get_min_index(self):
+        self.assertEquals(
+            get_min_index([[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+                          [1, 5, 9]), 0)
+        self.assertEquals(
+            get_min_index([[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+                          [9, 5, 1]), 2)
+        self.assertEquals(
+            get_min_index([[1, 2, 3], [4, 5, 6], [7, 8, 0]],
+                          [9, 5, 1]), 1)
+        self.assertEquals(
+            get_min_index([[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+                          [3, 5, 9]), 1)
+        self.assertEquals(
+            get_min_index([[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+                          [3, 6, 9]), None)
 
 
 class TestHighlight(TestCase):
@@ -129,7 +151,7 @@ class TestExcerpt(TestCase):
         self.assertEquals(
             excerpt(self.content, ['aliquet', 'lacus'], 40), result)
         self.assertEquals(
-            excerpt(self.content, ['lacus', 'aliquet']), result)
+            excerpt(self.content, ['lacus', 'aliquet'], 40), result)
         self.assertEquals(
             excerpt(self.content, ['aliquet', 'lacus'], 20),
             'urna lacus sit amet velit. Quisque ut leo '
