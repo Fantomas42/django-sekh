@@ -1,4 +1,5 @@
 """Utils for django-sekh"""
+from itertools import izip
 
 
 def remove_duplicates(items):
@@ -21,6 +22,17 @@ def list_range(x):
     Returns the range of a list.
     """
     return max(x) - min(x)
+
+
+def get_window(positions, indices):
+    """
+    Given a list of lists and an index for each of those lists,
+    this returns a list of all of the corresponding values for those
+    lists and their respective index.
+    """
+    return [word_positions[index] for
+            word_positions, index in
+            izip(positions, indices)]
 
 
 def get_min_index(positions, window):

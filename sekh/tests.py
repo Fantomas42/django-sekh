@@ -9,6 +9,7 @@ from django.template import TemplateSyntaxError
 from sekh.excerpt import excerpt
 from sekh.highlighting import highlight
 from sekh.utils import list_range
+from sekh.utils import get_window
 from sekh.utils import get_min_index
 from sekh.utils import remove_duplicates
 from sekh.middleware import KeywordsHighlightingMiddleware
@@ -44,6 +45,15 @@ class TestListRange(TestCase):
             list_range([5, 6, 10]), 5)
         self.assertEquals(
             list_range([1, 7, 9]), 8)
+
+
+class TestGetWindow(TestCase):
+    """Tests of get_window function"""
+
+    def test_get_window(self):
+        self.assertEquals(
+            get_window([[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+                       [0, 1, 2]), [1, 5, 9])
 
 
 class TestGetMinIndex(TestCase):
