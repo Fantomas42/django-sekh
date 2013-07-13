@@ -88,16 +88,17 @@ class TestExcerpt(TestCase):
 
     def test_excerpt(self):
         self.assertEquals(
-            excerpt(self.content, ['lacus']),
+            excerpt(self.content, ['lacus'], 40),
             'et aliquet. Sed sit amet ultricies libero. Etiam facilisis, '
             'lectus ut tristique rutrum, leo libero elementum eros, sed '
             'lobortis urna lacus sit amet velit. Quisque ut leo eu dolor '
             'aliquet eleifend mattis et urna. Praesent vitae viverra purus.')
         self.assertEquals(
             excerpt(self.content, ['lacus'], 10),
-            'elementum eros, sed lobortis urna lacus sit amet velit. Quisque ut')
+            'elementum eros, sed lobortis urna lacus sit amet velit. '
+            'Quisque ut')
         self.assertEquals(
-            excerpt(self.content, ['aliquet']),
+            excerpt(self.content, ['aliquet'], 40),
             'consectetur adipiscing elit. In in nunc eros! Suspendisse a '
             'feugiat eros, et pharetra nisl ? Cras pulvinar varius enim '
             'et aliquet. Sed sit amet ultricies libero. Etiam facilisis, '
@@ -105,7 +106,8 @@ class TestExcerpt(TestCase):
             'lobortis urna lacus sit')
         self.assertEquals(
             excerpt(self.content, ['aliquet'], 10),
-            'Cras pulvinar varius enim et aliquet. Sed sit amet ultricies libero.')
+            'Cras pulvinar varius enim et aliquet. Sed sit amet '
+            'ultricies libero.')
 
     def test_excerpt_multi_terms(self):
         result = (
@@ -114,7 +116,7 @@ class TestExcerpt(TestCase):
             'aliquet eleifend mattis et urna. Praesent vitae viverra purus.'
         )
         self.assertEquals(
-            excerpt(self.content, ['aliquet', 'lacus']), result)
+            excerpt(self.content, ['aliquet', 'lacus'], 40), result)
         self.assertEquals(
             excerpt(self.content, ['lacus', 'aliquet']), result)
         self.assertEquals(
@@ -124,7 +126,7 @@ class TestExcerpt(TestCase):
 
     def test_excerpt_case(self):
         self.assertEquals(
-            excerpt(self.content, ['LACUS']),
+            excerpt(self.content, ['LACUS'], 40),
             'et aliquet. Sed sit amet ultricies libero. Etiam facilisis, '
             'lectus ut tristique rutrum, leo libero elementum eros, sed '
             'lobortis urna lacus sit amet velit. Quisque ut leo eu dolor '
@@ -132,7 +134,7 @@ class TestExcerpt(TestCase):
 
     def test_excerpt_not_present(self):
         self.assertEquals(
-            excerpt(self.content, ['toto']),
+            excerpt(self.content, ['toto'], 40),
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
             'In in nunc eros! Suspendisse a feugiat eros, et pharetra '
             'nisl ? Cras pulvinar varius enim et aliquet. Sed sit amet '
@@ -145,7 +147,7 @@ class TestExcerpt(TestCase):
 
     def test_excerpt_none(self):
         self.assertEquals(
-            excerpt(self.content, []),
+            excerpt(self.content, [], 40),
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
             'In in nunc eros! Suspendisse a feugiat eros, et pharetra '
             'nisl ? Cras pulvinar varius enim et aliquet. Sed sit amet '
