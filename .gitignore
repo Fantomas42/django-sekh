@@ -14,4 +14,5 @@ develop-eggs/*
 downloads/*
 src_eggs/*
 .coverage
+.noseids
 TODO
