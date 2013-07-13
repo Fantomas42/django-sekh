@@ -1,4 +1,4 @@
-"""Unit tests for sekh"""
+"""Unit tests for django-sekh"""
 from django.test import TestCase
 from django.http import HttpRequest
 from django.http import HttpResponse
@@ -6,8 +6,8 @@ from django.template import Context
 from django.template import Template
 from django.template import TemplateSyntaxError
 
-from sekh.utils import excerpt
-from sekh.utils import highlight
+from sekh.excerpt import excerpt
+from sekh.highlighting import highlight
 from sekh.utils import remove_duplicates
 from sekh.middleware import KeywordsHighlightingMiddleware
 

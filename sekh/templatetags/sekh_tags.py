@@ -6,7 +6,7 @@ from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
 from django.template.defaultfilters import stringfilter
 
-from sekh.utils import highlight
+from sekh.highlighting import highlight
 from sekh.utils import remove_duplicates
 
 RE_ARG_SPLIT = re.compile(r'[ ;,]')

@@ -1,6 +1,8 @@
-"""Middleware for highlighing the keywords
-of an user's search in a HTML page,
-based on http://www.djangosnippets.org/snippets/197/"""
+"""
+Middleware for highlighing the keywords
+of an user's search in a HTML page based on
+http://www.djangosnippets.org/snippets/197/
+"""
 import re
 try:
     from urllib.parse import urlsplit
@@ -9,9 +11,9 @@ except ImportError:  # Python 2
     from urlparse import urlsplit
     from urlparse import parse_qs
 
-from sekh.utils import highlight
-from sekh.utils import remove_duplicates
 from sekh.settings import GET_VARNAMES
+from sekh.highlighting import highlight
+from sekh.utils import remove_duplicates
 
 
 class BaseSearchReferrer(object):
