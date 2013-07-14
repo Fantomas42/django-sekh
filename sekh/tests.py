@@ -455,3 +455,25 @@ class TestHighlightTag(TestCase):
             <p>Coding is fun :).</p>
             {% endhighlight %}
             """)
+
+
+class TestExcerptFilter(TestCase):
+    """Tests of Excerpt filter"""
+
+    def test_filter(self):
+        pass
+
+    def test_filter_with_variable(self):
+        pass
+
+class TestExcerptTag(TestCase):
+    """Test for Excerpt tag"""
+
+    def test_tag(self):
+        pass
+
+    def test_tag_variable_content(self):
+        pass
+
+    def test_tag_error(self):
+        pass
