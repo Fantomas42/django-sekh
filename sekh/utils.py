@@ -1,4 +1,5 @@
 """Utils for django-sekh"""
+import re
 from itertools import izip
 
 
@@ -15,6 +16,15 @@ def remove_duplicates(items):
         seen[item] = True
         result.append(item)
     return result
+
+
+def compile_terms(terms):
+    """
+    Compile terms as regular expression,
+    for better matching.
+    """
+    return [re.compile(re.escape(term), re.I | re.U)
+            for term in terms]
 
 
 def list_range(x):

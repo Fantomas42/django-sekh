@@ -1,8 +1,7 @@
 """Highlighting for django-sekh"""
-import re
-
 from bs4 import BeautifulSoup
 
+from sekh.utils import compile_terms
 from sekh.settings import PROTECTED_MARKUPS
 from sekh.settings import HIGHLIGHTING_PATTERN
 
@@ -14,10 +13,10 @@ def highlight(content, terms):
     index = 1
     update_content = False
     soup = BeautifulSoup(content)
-    for term in terms:
-        pattern = re.compile(re.escape(term), re.I | re.U)
+    terms = compile_terms(terms)
 
-        for text in soup.find_all(text=pattern):
+    for term in terms:
+        for text in soup.find_all(text=term):
             if text.parent.name in PROTECTED_MARKUPS:
                 continue
 
@@ -26,7 +25,7 @@ def highlight(content, terms):
                 return HIGHLIGHTING_PATTERN % {
                     'index': index, 'term': match_term}
 
-            new_text = pattern.sub(highlight, text)
+            new_text = term.sub(highlight, text)
             text.replace_with(BeautifulSoup(new_text))
             update_content = True
         # Reload the entire soup, because substituion

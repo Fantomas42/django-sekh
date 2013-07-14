@@ -11,6 +11,7 @@ from sekh.highlighting import highlight
 from sekh.utils import list_range
 from sekh.utils import get_window
 from sekh.utils import get_min_index
+from sekh.utils import compile_terms
 from sekh.utils import remove_duplicates
 from sekh.middleware import KeywordsHighlightingMiddleware
 
@@ -35,6 +36,14 @@ class TestRemoveDuplicates(TestCase):
         self.assertEquals(
             remove_duplicates(['titi', ' ', 'toto', '', ' titi']),
             ['titi', 'toto'])
+
+
+class TestCompileTerms(TestCase):
+    """Test of compile_terms function"""
+
+    def test_compile_terms(self):
+        terms = compile_terms(['toto', 'titi'])
+        self.assertTrue(terms[0].match(u'TOTO'))
 
 
 class TestListRange(TestCase):
