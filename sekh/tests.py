@@ -6,13 +6,16 @@ from django.template import Context
 from django.template import Template
 from django.template import TemplateSyntaxError
 
-from sekh.excerpt import excerpt
-from sekh.highlighting import highlight
 from sekh.utils import list_range
 from sekh.utils import get_window
 from sekh.utils import get_min_index
 from sekh.utils import compile_terms
 from sekh.utils import remove_duplicates
+from sekh.excerpt import excerpt
+from sekh.excerpt import shorten_excerpt
+from sekh.excerpt import shortest_term_span
+from sekh.excerpt import generate_term_positions
+from sekh.highlighting import highlight
 from sekh.middleware import KeywordsHighlightingMiddleware
 
 
@@ -125,6 +128,63 @@ class TestHighlight(TestCase):
             highlight(HTML_CONTENT.replace('world', '<pre>world</pre>'),
                       ['world']),
             '<html><body><p>Hello <pre>world</pre> !</p></body></html>')
+
+
+class TestGenerateTermPositions(TestCase):
+    """Test of generate_term_positions function"""
+    content = ('Il etait une fois dans un pays merveilleux, '
+               'un petit garcon nomme Darwin').split()
+
+    def test_generate_term_positions(self):
+        self.assertEquals(
+            generate_term_positions(self.content, ['garcon']),
+            [[10]])
+        self.assertEquals(
+            generate_term_positions(self.content, ['toto']),
+            [])
+
+    def test_generate_term_positions_multi(self):
+        self.assertEquals(
+            generate_term_positions(self.content, ['un', 'garcon']),
+            [[10], [2, 5, 8]])
+        self.assertEquals(
+            generate_term_positions(self.content, ['garcon', 'un']),
+            [[10], [2, 5, 8]])
+        self.assertEquals(
+            generate_term_positions(self.content, ['garcon', 'toto', 'un']),
+            [[10], [2, 5, 8]])
+
+    def test_generate_term_positions_case(self):
+        self.assertEquals(
+            generate_term_positions(self.content, ['UN', 'gARcon']),
+            [[2, 5, 8], [10]])
+
+
+class TestShortestTermSpan(TestCase):
+    """Test of shortest_term_span function"""
+
+    def test_shortest_term_span(self):
+        self.assertEquals(
+            shortest_term_span([[0, 5, 10, 15],
+                                [1, 3, 6, 9],
+                                [4, 8, 16, 21]]),
+            [5, 3, 4])
+        self.assertEquals(
+            shortest_term_span([[0, 5],
+                                [1, 3, 9],
+                                [8, 16, 21, 22]]),
+            [5, 9, 8])
+
+
+class TestShortenExcerpt(TestCase):
+    """Test of shorten_excerpt function"""
+
+    def test_shorten_excerpt(self):
+        self.assertEquals(
+            shorten_excerpt(
+                'test blah blah blah blah blah blah case',
+                'test case'),
+            'test blah blah blah blah blah ... case')
 
 
 class TestExcerpt(TestCase):
