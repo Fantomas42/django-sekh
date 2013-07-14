@@ -168,12 +168,12 @@ class TestShortestTermSpan(TestCase):
             shortest_term_span([[0, 5, 10, 15],
                                 [1, 3, 6, 9],
                                 [4, 8, 16, 21]]),
-            [5, 3, 4])
+            [3, 4, 5])
         self.assertEquals(
             shortest_term_span([[0, 5],
                                 [1, 3, 9],
                                 [8, 16, 21, 22]]),
-            [5, 9, 8])
+            [5, 8, 9])
 
 
 class TestShortenExcerpt(TestCase):
@@ -223,18 +223,29 @@ class TestExcerpt(TestCase):
 
     def test_excerpt_multi_terms(self):
         result = (
+            'et aliquet. Sed sit amet ultricies libero. Etiam facilisis, '
             'lectus ut tristique rutrum, leo libero elementum eros, sed '
             'lobortis urna lacus sit amet velit. Quisque ut leo eu dolor '
-            'aliquet eleifend mattis et urna. Praesent vitae viverra purus.'
-        )
+            'aliquet eleifend mattis et urna. Praesent vitae viverra purus.')
+        result_compressed = (
+            'ut tristique rutrum, leo libero elementum ... lacus sit amet '
+            'velit. Quisque ut ... aliquet eleifend mattis et urna. '
+            'Praesent ...')
         self.assertEquals(
             excerpt(self.content, ['aliquet', 'lacus'], 40), result)
         self.assertEquals(
             excerpt(self.content, ['lacus', 'aliquet'], 40), result)
         self.assertEquals(
             excerpt(self.content, ['aliquet', 'lacus'], 20),
-            'urna lacus sit amet velit. Quisque ut leo '
-            'eu dolor aliquet eleifend')
+            result_compressed)
+
+    def test_excerpt_multi_terms_extra_long(self):
+        self.assertEquals(
+            excerpt(self.content, ['lorem', 'purus'], 40),
+            'Lorem ipsum dolor sit amet, consectetur ... purus.')
+        self.assertEquals(
+            excerpt(self.content, ['lorem', 'purus'], 10),
+            'Lorem ipsum dolor sit amet, consectetur ... purus.')
 
     def test_excerpt_case(self):
         self.assertEquals(

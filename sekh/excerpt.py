@@ -41,7 +41,7 @@ def shortest_term_span(positions):
         min_index = get_min_index(positions, window)
 
         if min_index is None:
-            return min_window
+            return sorted(min_window)
 
         indices[min_index] += 1
 
@@ -51,7 +51,7 @@ def shortest_term_span(positions):
             min_window = window
 
         if list_range(min_window) == len(positions):
-            return min_window
+            return sorted(min_window)
 
 
 def shorten_excerpt(content, terms):
@@ -63,22 +63,24 @@ def shorten_excerpt(content, terms):
     flattened_excerpt_words = []
     last_term_appearence = 0
     skipping_words = False
+    terms = compile_terms(terms)
 
     for i, word in enumerate(content.split()):
 
         # Spotted a matched term, set our state flag to false and update
         # the "time" of our last term appearance
-        if word in terms:
-            last_term_appearence = i
-            skipping_words = False
+        for term in terms:
+            if term.match(word):
+                last_term_appearence = i
+                skipping_words = False
 
         # If it's been too long since our last match, start dropping words
         if i - last_term_appearence > EXCERPT_MATCH_WINDOW_SIZE:
 
-            # Only want to add "..." once between terms,
+            # Only want to add '...' once between terms,
             # so check our state flag first
             if not skipping_words:
-                flattened_excerpt_words.append("...")
+                flattened_excerpt_words.append('...')
                 skipping_words = True
 
             continue
@@ -104,7 +106,7 @@ def excerpt(content, terms, max_length):
     start = max(0, span[0] - half_max_length)
     end = min(len(splitted_content), span[-1] + half_max_length)
 
-    excerpt = ' '.join(splitted_content[start:end+1])
+    excerpt = ' '.join(splitted_content[start:end + 1])
 
     if (end - start > max_length):
         excerpt = shorten_excerpt(excerpt, terms)
