@@ -347,32 +347,33 @@ class TestHighlightFilter(TestCase):
                '<span class="highlight term-2">fun</span> :).</p>'
 
     def test_filter(self):
+        context = Context({'content': 'Coding is fun :).'})
         t = Template("""
         {% load sekh_tags %}
         <p>{{ content|highlight:"coding,fun" }}</p>
         """)
-        html = t.render(Context({'content': 'Coding is fun :).'}))
+        html = t.render(context)
         self.assertEquals(html.strip(), self.response)
 
         t = Template("""
         {% load sekh_tags %}
         <p>{{ content|highlight:"coding, fun" }}</p>
         """)
-        html = t.render(Context({'content': 'Coding is fun :).'}))
+        html = t.render(context)
         self.assertEquals(html.strip(), self.response)
 
         t = Template("""
         {% load sekh_tags %}
         <p>{{ content|highlight:"coding fun" }}</p>
         """)
-        html = t.render(Context({'content': 'Coding is fun :).'}))
+        html = t.render(context)
         self.assertEquals(html.strip(), self.response)
 
         t = Template("""
         {% load sekh_tags %}
         <p>{{ content|highlight:"coding coding fun" }}</p>
         """)
-        html = t.render(Context({'content': 'Coding is fun :).'}))
+        html = t.render(context)
         self.assertEquals(html.strip(), self.response)
 
     def test_filter_with_variable(self):
@@ -459,21 +460,124 @@ class TestHighlightTag(TestCase):
 
 class TestExcerptFilter(TestCase):
     """Tests of Excerpt filter"""
+    content = ''
+    response = ''
 
     def test_filter(self):
-        pass
+        context = Context({'content': self.content})
+        t = Template("""
+        {% load sekh_tags %}
+        <p>{{ content|excerpt:"coding,fun" }}</p>
+        """)
+        html = t.render(context)
+        self.assertEquals(html.strip(), self.response)
+
+        t = Template("""
+        {% load sekh_tags %}
+        <p>{{ content|excerpt:"coding, fun" }}</p>
+        """)
+        html = t.render(context)
+        self.assertEquals(html.strip(), self.response)
+
+        t = Template("""
+        {% load sekh_tags %}
+        <p>{{ content|excerpt:"coding fun" }}</p>
+        """)
+        html = t.render(context)
+        self.assertEquals(html.strip(), self.response)
+
+        t = Template("""
+        {% load sekh_tags %}
+        <p>{{ content|excerpt:"coding coding fun" }}</p>
+        """)
+        html = t.render(context)
+        self.assertEquals(html.strip(), self.response)
 
     def test_filter_with_variable(self):
-        pass
+        t = Template("""
+        {% load sekh_tags %}
+        <p>{{ content|highlight:query }}</p>
+        """)
+        html = t.render(Context({'content': self.content,
+                                 'query': 'coding, fun'}))
+        self.assertEquals(html.strip(), self.response)
+
 
 class TestExcerptTag(TestCase):
     """Test for Excerpt tag"""
+    content = ''
 
     def test_tag(self):
-        pass
+        t = Template("""
+        {% load sekh_tags %}
+        {% excerpt "coding fun" %}
+        <p>{{ content }}</p>
+        {% endexcerpt %}
+        """)
+        html = t.render(Context({'content': self.content}))
+        self.assertEquals(html.strip(), self.response)
+
+        t = Template("""
+        {% load sekh_tags %}
+        {% excerpt "coding,fun" %}
+        <p>Coding is fun :).</p>
+        {% endexcerpt %}
+        """)
+        html = t.render(Context())
+        self.assertEquals(html.strip(), self.response)
+
+        t = Template("""
+        {% load sekh_tags %}
+        {% excerpt "coding, fun" %}
+        <p>Coding is fun :).</p>
+        {% endexcerpt %}
+        """)
+        html = t.render(Context())
+        self.assertEquals(html.strip(), self.response)
+
+        t = Template("""
+        {% load sekh_tags %}
+        {% excerpt "coding fun" %}
+        <p>Coding is fun :).</p>
+        {% endexcerpt %}
+        """)
+        html = t.render(Context())
+        self.assertEquals(html.strip(), self.response)
+
+        t = Template("""
+        {% load sekh_tags %}
+        {% excerpt "coding coding fun" %}
+        <p>Coding is fun :).</p>
+        {% endexcerpt %}
+        """)
+        html = t.render(Context())
+        self.assertEquals(html.strip(), self.response)
+
+        t = Template("""
+        {% load sekh_tags %}
+        {% excerpt "coding fun" 20 %}
+        <p>Coding is fun :).</p>
+        {% endexcerpt %}
+        """)
+        html = t.render(Context())
+        self.assertEquals(html.strip(), self.response)
 
     def test_tag_variable_content(self):
-        pass
+        t = Template("""
+        {% load sekh_tags %}
+        {% excerpt query %}
+        <p>{{ content }}</p>
+        {% endexcerpt %}
+        """)
+        html = t.render(Context({'content': 'Coding is fun :).',
+                                 'query': 'coding, fun'}))
+        self.assertEquals(html.strip(), self.response)
 
     def test_tag_error(self):
-        pass
+        with self.assertRaises(TemplateSyntaxError):
+            Template("""
+            {% load sekh_tags %}
+            {% excerpt %}
+            <p>Coding is fun :).</p>
+            {% endexcerpt %}
+            """)
