@@ -13,5 +13,8 @@ HIGHLIGHTING_PATTERN = getattr(
     settings, 'HIGHLIGHT_HIGHLIGHTING_PATTERN',
     '<span class="highlight term-%(index)s">%(term)s</span>')
 
+EXCERPT_MAX_LENGTH = getattr(
+    settings, 'HIGHLIGHT_EXCERPT_MAX_LENGTH', 50)
+
 EXCERPT_MATCH_WINDOW_SIZE = getattr(
     settings, 'HIGHLIGHT_EXCERPT_MATCH_WINDOW_SIZE', 5)

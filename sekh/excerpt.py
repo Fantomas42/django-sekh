@@ -3,6 +3,7 @@ from sekh.utils import list_range
 from sekh.utils import get_window
 from sekh.utils import get_min_index
 from sekh.utils import compile_terms
+from sekh.settings import EXCERPT_MAX_LENGTH
 from sekh.settings import EXCERPT_MATCH_WINDOW_SIZE
 
 
@@ -90,7 +91,7 @@ def shorten_excerpt(content, terms):
     return ' '.join(flattened_excerpt_words)
 
 
-def excerpt(content, terms, max_length):
+def excerpt(content, terms, max_length=EXCERPT_MAX_LENGTH):
     """
     Make a excerpt centered on the terms.
     """
