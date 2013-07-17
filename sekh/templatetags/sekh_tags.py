@@ -92,7 +92,6 @@ def excerpt_tag(parser, token):
 
 @register.filter(name='excerpt')
 @stringfilter
-def excerpt_filter(value, terms, max_length):
+def excerpt_filter(value, terms):
     return excerpt(value,
-                   remove_duplicates(RE_ARG_SPLIT.split(terms)),
-                   max_length)
+                   remove_duplicates(RE_ARG_SPLIT.split(terms)))

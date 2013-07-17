@@ -460,35 +460,56 @@ class TestHighlightTag(TestCase):
 
 class TestExcerptFilter(TestCase):
     """Tests of Excerpt filter"""
-    content = ''
-    response = ''
+    content = (
+        "The Zen of Python, by Tim Peters "
+        "Beautiful is better than ugly. "
+        "Explicit is better than implicit. "
+        "Simple is better than complex. "
+        "Complex is better than complicated. "
+        "Flat is better than nested. "
+        "Sparse is better than dense. "
+        "Readability counts. "
+        "Special cases aren't special enough to break the rules. "
+        "Although practicality beats purity. "
+        "Errors should never pass silently. "
+        "Unless explicitly silenced. "
+        "In the face of ambiguity, refuse the temptation to guess. "
+        "There should be one- and preferably only one -obvious way to do it."
+        "Although that way may not be obvious at first unless you're Dutch. "
+        "Now is better than never. "
+        "Although never is often better than *right* now. "
+        "If the implementation is hard to explain, it's a bad idea. "
+        "If the implementation is easy to explain, it may be a good idea. "
+        "Namespaces are one honking great idea -- let's do more of those!")
+    response = ('The Zen of Python, by Tim ... Beautiful is better than ugly'
+                '. Explicit ... temptation to guess. There should be ...')
 
     def test_filter(self):
         context = Context({'content': self.content})
         t = Template("""
         {% load sekh_tags %}
-        <p>{{ content|excerpt:"coding,fun" }}</p>
+        {{ content|excerpt:"beautiful,temptation" }}
         """)
         html = t.render(context)
         self.assertEquals(html.strip(), self.response)
 
         t = Template("""
         {% load sekh_tags %}
-        <p>{{ content|excerpt:"coding, fun" }}</p>
+        {{ content|excerpt:"beautiful, temptation" }}
         """)
         html = t.render(context)
         self.assertEquals(html.strip(), self.response)
 
         t = Template("""
         {% load sekh_tags %}
-        <p>{{ content|excerpt:"coding fun" }}</p>
+        {{ content|excerpt:"beautiful temptation" }}
         """)
         html = t.render(context)
         self.assertEquals(html.strip(), self.response)
 
         t = Template("""
         {% load sekh_tags %}
-        <p>{{ content|excerpt:"coding coding fun" }}</p>
+        {{ content|excerpt:"beautiful beautiful temptation" }}
         """)
         html = t.render(context)
         self.assertEquals(html.strip(), self.response)
@@ -496,10 +517,10 @@ class TestExcerptFilter(TestCase):
     def test_filter_with_variable(self):
         t = Template("""
         {% load sekh_tags %}
-        <p>{{ content|highlight:query }}</p>
+        {{ content|excerpt:query }}
         """)
         html = t.render(Context({'content': self.content,
-                                 'query': 'coding, fun'}))
+                                 'query': 'beautiful, temptation'}))
         self.assertEquals(html.strip(), self.response)
 
 
