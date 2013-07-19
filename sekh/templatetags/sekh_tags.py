@@ -82,6 +82,7 @@ def highlight_filter(value, terms, autoescape=None):
 def excerpt_tag(parser, token):
     try:
         tag_name, terms, max_length = token.split_contents()
+        max_length = int(max_length)
     except ValueError:
         try:
             tag_name, terms = token.split_contents()

@@ -458,8 +458,8 @@ class TestHighlightTag(TestCase):
             """)
 
 
-class TestExcerptFilter(TestCase):
-    """Tests of Excerpt filter"""
+class ExcerptTestCase(TestCase):
+    """Base TestCase for Excerpt"""
     content = (
         "The Zen of Python, by Tim Peters "
         "Beautiful is better than ugly. "
@@ -483,6 +483,10 @@ class TestExcerptFilter(TestCase):
         "Namespaces are one honking great idea -- let's do more of those!")
     response = ('The Zen of Python, by Tim ... Beautiful is better than ugly'
                 '. Explicit ... temptation to guess. There should be ...')
+
+
+class TestExcerptFilter(ExcerptTestCase):
+    """Tests of Excerpt filter"""
 
     def test_filter(self):
         context = Context({'content': self.content})
@@ -524,75 +528,78 @@ class TestExcerptFilter(TestCase):
         self.assertEquals(html.strip(), self.response)
 
 
-class TestExcerptTag(TestCase):
+class TestExcerptTag(ExcerptTestCase):
     """Test for Excerpt tag"""
-    content = ''
-    response = ''
 
     def test_tag(self):
+        context = Context({'content': self.content})
         t = Template("""
         {% load sekh_tags %}
-        {% excerpt "coding fun" %}
-        <p>{{ content }}</p>
+        {% excerpt "beautiful temptation" %}
+        {{ content }}
         {% endexcerpt %}
         """)
-        html = t.render(Context({'content': self.content}))
+        html = t.render(context)
         self.assertEquals(html.strip(), self.response)
 
         t = Template("""
         {% load sekh_tags %}
-        {% excerpt "coding,fun" %}
-        <p>Coding is fun :).</p>
+        {% excerpt "beautiful,temptation" %}
+        {{ content }}
         {% endexcerpt %}
         """)
+        html = t.render(context)
+        self.assertEquals(html.strip(), self.response)
+
+        t = Template("""
+        {% load sekh_tags %}
+        {% excerpt "beautiful, temptation" %}
+        {{ content }}
+        {% endexcerpt %}
+        """)
+        html = t.render(context)
+        self.assertEquals(html.strip(), self.response)
+
+        t = Template("""
+        {%% load sekh_tags %%}
+        {%% excerpt "beautiful temptation" %%}
+        %s
+        {%% endexcerpt %%}
+        """ % self.content)
         html = t.render(Context())
         self.assertEquals(html.strip(), self.response)
 
         t = Template("""
         {% load sekh_tags %}
-        {% excerpt "coding, fun" %}
-        <p>Coding is fun :).</p>
+        {% excerpt "beautiful beautiful temptation" %}
+        {{ content }}
         {% endexcerpt %}
         """)
-        html = t.render(Context())
+        html = t.render(context)
         self.assertEquals(html.strip(), self.response)
 
         t = Template("""
         {% load sekh_tags %}
-        {% excerpt "coding fun" %}
-        <p>Coding is fun :).</p>
+        {% excerpt "beautiful temptation" 10 %}
+        {{ content }}
         {% endexcerpt %}
         """)
-        html = t.render(Context())
-        self.assertEquals(html.strip(), self.response)
+        html = t.render(context)
 
-        t = Template("""
-        {% load sekh_tags %}
-        {% excerpt "coding coding fun" %}
-        <p>Coding is fun :).</p>
-        {% endexcerpt %}
-        """)
-        html = t.render(Context())
-        self.assertEquals(html.strip(), self.response)
-
-        t = Template("""
-        {% load sekh_tags %}
-        {% excerpt "coding fun" 20 %}
-        <p>Coding is fun :).</p>
-        {% endexcerpt %}
-        """)
-        html = t.render(Context())
-        self.assertEquals(html.strip(), self.response)
+        self.assertEquals(
+            html.strip(),
+            'of Python, by Tim Peters Beautiful is better than ugly. '
+            'Explicit ... temptation to guess. There should be')
 
     def test_tag_variable_content(self):
         t = Template("""
         {% load sekh_tags %}
         {% excerpt query %}
-        <p>{{ content }}</p>
+        {{ content }}
         {% endexcerpt %}
         """)
-        html = t.render(Context({'content': 'Coding is fun :).',
-                                 'query': 'coding, fun'}))
+        html = t.render(Context({'content': self.content,
+                                 'query': 'beautiful, temptation'}))
         self.assertEquals(html.strip(), self.response)
 
     def test_tag_error(self):
