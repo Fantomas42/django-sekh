@@ -9,6 +9,7 @@ from django.template.defaultfilters import stringfilter
 from sekh.excerpt import excerpt
 from sekh.highlighting import highlight
 from sekh.utils import remove_duplicates
+from sekh.settings import EXCERPT_MAX_LENGTH
 
 RE_ARG_SPLIT = re.compile(r'[ ;,]')
 register = template.Library()
@@ -82,8 +83,12 @@ def excerpt_tag(parser, token):
     try:
         tag_name, terms, max_length = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError(
-            'excerpt tag requires exactly two arguments')
+        try:
+            tag_name, terms = token.split_contents()
+            max_length = EXCERPT_MAX_LENGTH
+        except ValueError:
+            raise template.TemplateSyntaxError(
+                'excerpt tag requires at least one argument')
 
     nodelist = parser.parse(('endexcerpt',))
     parser.delete_first_token()

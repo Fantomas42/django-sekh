@@ -527,6 +527,7 @@ class TestExcerptFilter(TestCase):
 class TestExcerptTag(TestCase):
     """Test for Excerpt tag"""
     content = ''
+    response = ''
 
     def test_tag(self):
         t = Template("""
