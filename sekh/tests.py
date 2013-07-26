@@ -174,6 +174,11 @@ class TestShortestTermSpan(TestCase):
                                 [1, 3, 9],
                                 [8, 16, 21, 22]]),
             [5, 8, 9])
+        self.assertEquals(
+            shortest_term_span([[0, 1],
+                                [4, 5],
+                                [2, 3]]),
+            [1, 2, 4])
 
 
 class TestShortenExcerpt(TestCase):

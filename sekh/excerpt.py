@@ -42,7 +42,7 @@ def shortest_term_span(positions):
         min_index = get_min_index(positions, window)
 
         if min_index is None:
-            return sorted(min_window)
+            break
 
         indices[min_index] += 1
 
@@ -52,7 +52,9 @@ def shortest_term_span(positions):
             min_window = window
 
         if list_range(min_window) == len(positions):
-            return sorted(min_window)
+            break
+
+    return sorted(min_window)
 
 
 def shorten_excerpt(content, terms):
