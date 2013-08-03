@@ -6,6 +6,9 @@ install:
     - pip install -U setuptools
     - python bootstrap.py
     - ./bin/buildout -c travis.cfg
+before_script:
+    - ./bin/pyflakes sekh
+    - ./bin/pep8 --count --show-source --statistics sekh
 script:
     - ./bin/test
 after_success:
