@@ -6,6 +6,8 @@ install:
     - pip install -U setuptools
     - python bootstrap.py
     - ./bin/buildout -c travis.cfg
+before_script:
+    - ./bin/flake8 sekh
 script:
     - ./bin/test
 after_success:
