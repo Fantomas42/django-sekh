@@ -18,10 +18,8 @@ test:
 	@./bin/test
 
 kwalitee:
-	@echo "$(COLOR)* Running pyflakes$(NO_COLOR)"
-	@./bin/pyflakes sekh
-	@echo "$(COLOR)* Running pep8$(NO_COLOR)"
-	@./bin/pep8 --count --show-source --show-pep8 --statistics sekh
+	@echo "$(COLOR)* Running flake8$(NO_COLOR)"
+	@./bin/flake8 --count --show-source --show-pep8 --statistics sekh
 	@echo "$(SUCCESS_COLOR)* No kwalitee errors, Congratulations ! :)$(NO_COLOR)"
 
 2to3:
