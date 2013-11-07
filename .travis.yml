@@ -5,10 +5,10 @@ python:
 install:
     - pip install -U setuptools
     - python bootstrap.py
-    - ./bin/buildout -c travis.cfg
+    - ./bin/buildout
 before_script:
     - ./bin/flake8 sekh
 script:
-    - ./bin/test
+    - ./bin/test-and-cover
 after_success:
     - ./bin/coveralls
