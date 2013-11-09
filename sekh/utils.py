@@ -1,6 +1,7 @@
 """Utils for django-sekh"""
+from future_builtins import zip
+
 import re
-from itertools import izip
 
 
 def remove_duplicates(items):
@@ -42,7 +43,7 @@ def get_window(positions, indices):
     """
     return [word_positions[index] for
             word_positions, index in
-            izip(positions, indices)]
+            zip(positions, indices)]
 
 
 def get_min_index(positions, window):
