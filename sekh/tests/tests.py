@@ -46,7 +46,7 @@ class TestCompileTerms(TestCase):
 
     def test_compile_terms(self):
         terms = compile_terms(['toto', 'titi'])
-        self.assertTrue(terms[0].match(u'TOTO'))
+        self.assertTrue(terms[0].match('TOTO'))
 
 
 class TestListRange(TestCase):
