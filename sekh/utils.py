@@ -1,5 +1,8 @@
 """Utils for django-sekh"""
-from future_builtins import zip
+try:
+    from future_builtins import zip
+except ImportError:
+    pass
 
 import re
 
