@@ -105,7 +105,7 @@ def excerpt(content, terms, max_length=EXCERPT_MAX_LENGTH):
 
     span = shortest_term_span(positions)
 
-    half_max_length = max_length / 2
+    half_max_length = int(max_length / 2)
     start = max(0, span[0] - half_max_length)
     end = min(len(splitted_content), span[-1] + half_max_length)
 
