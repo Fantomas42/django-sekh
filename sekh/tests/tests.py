@@ -301,12 +301,12 @@ class TestKeywordsHighlightingMiddleware(TestCase):
         response = KeywordsHighlightingMiddleware().process_response(
             self._get_request(referer='http://toto.com/?q=Hello'),
             HttpResponse(HTML_CONTENT))
-        self.assertEquals(response.content, HTML_CONTENT)
+        self.assertEquals(response.content.decode('utf-8'), HTML_CONTENT)
 
         response = KeywordsHighlightingMiddleware().process_response(
             self._get_request(referer='http://www.google.com/?q=world'),
             HttpResponse(HTML_CONTENT))
-        self.assertEquals(response.content,
+        self.assertEquals(response.content.decode('utf-8'),
                           '<html><body><p>Hello <span class="highlight '
                           'term-1">world</span> !</p></body></html>')
 
@@ -314,18 +314,18 @@ class TestKeywordsHighlightingMiddleware(TestCase):
         response = KeywordsHighlightingMiddleware().process_response(
             self._get_request(),
             HttpResponse(HTML_CONTENT))
-        self.assertEquals(response.content, HTML_CONTENT)
+        self.assertEquals(response.content.decode('utf-8'), HTML_CONTENT)
 
         response = KeywordsHighlightingMiddleware().process_response(
             self._get_request({'highlight': 'ziltoid'}),
             HttpResponse(HTML_CONTENT))
-        self.assertEquals(response.content, HTML_CONTENT)
+        self.assertEquals(response.content.decode('utf-8'), HTML_CONTENT)
 
         response = KeywordsHighlightingMiddleware().process_response(
             self._get_request({'highlight': 'Hello world'}),
             HttpResponse(HTML_CONTENT))
         self.assertEquals(
-            response.content,
+            response.content.decode('utf-8'),
             '<html><body><p><span class="highlight term-1">Hello</span> '
             '<span class="highlight term-2">world</span> !</p></body></html>')
 
@@ -335,7 +335,7 @@ class TestKeywordsHighlightingMiddleware(TestCase):
                                'q': 'Hello'}),
             HttpResponse(HTML_CONTENT))
         self.assertEquals(
-            response.content,
+            response.content.decode('utf-8'),
             '<html><body><p><span class="highlight term-1">Hello</span> '
             '<span class="highlight term-2">world</span> !</p></body></html>')
 
@@ -343,7 +343,7 @@ class TestKeywordsHighlightingMiddleware(TestCase):
         response = KeywordsHighlightingMiddleware().process_response(
             self._get_request({'highlight': 'Hello world'}),
             HttpResponse(HTML_CONTENT, content_type='text/xml'))
-        self.assertEquals(response.content, HTML_CONTENT)
+        self.assertEquals(response.content.decode('utf-8'), HTML_CONTENT)
 
 
 class TestHighlightFilter(TestCase):
