@@ -48,8 +48,8 @@ class BaseSearchReferrer(object):
         """
         try:
             parsed = urlsplit(url)
-            network = parsed[1]
-            query = parsed[3]
+            network = parsed[1].decode('utf-8')
+            query = parsed[3].decode('utf-8')
         except (AttributeError, IndexError):
             return (None, None, [])
         for engine, param in self.SEARCH_PARAMS.items():
