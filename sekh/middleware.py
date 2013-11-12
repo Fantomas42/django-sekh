@@ -52,6 +52,8 @@ class BaseSearchReferrer(object):
             query = parsed[3]
         except (AttributeError, IndexError):
             return (None, None, [])
+        if not network:
+            return (None, None, [])
         for engine, param in self.SEARCH_PARAMS.items():
             match = re.match(self.NETWORK_RE % engine, network)
             if match and match.group(2):
@@ -72,8 +74,8 @@ class KeywordsHighlightingMiddleware(BaseSearchReferrer):
         """
         Transform the HTML if keywords are present.
         """
-        if response.status_code != 200 or \
-                not 'text/html' in response['Content-Type']:
+        if (response.status_code != 200 or
+                not 'text/html' in response['Content-Type']):
             return response
 
         referrer = request.META.get('HTTP_REFERER')
