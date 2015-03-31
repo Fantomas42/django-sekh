@@ -4,7 +4,7 @@ Django-SEKH
 
 |latest-version| |downloads|
 
-|travis-master| |coverage-master|
+|travis-develop| |coverage-develop|
 
 Django Search Engine Keywords **Highlighter**,
 
@@ -72,10 +72,10 @@ parameter in GET.
   http://localhost:8000/admin?hl=django%20admin
 
 
-.. |travis-master| image:: https://travis-ci.org/Fantomas42/django-sekh.png?branch=master
-   :alt: Build Status - master branch
+.. |travis-develop| image:: https://travis-ci.org/Fantomas42/django-sekh.png?branch=develop
+   :alt: Build Status - develop branch
    :target: http://travis-ci.org/Fantomas42/django-sekh
-.. |coverage-master| image:: https://coveralls.io/repos/Fantomas42/django-sekh/badge.png?branch=master
+.. |coverage-develop| image:: https://coveralls.io/repos/Fantomas42/django-sekh/badge.png?branch=develop
    :alt: Coverage of the code
    :target: https://coveralls.io/r/Fantomas42/django-sekh
 .. |latest-version| image:: https://pypip.in/v/django-sekh/badge.png
